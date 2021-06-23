@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block section %}
+  <div>
+    <div class="bg-light p-5 rounded">
+      <div class="col-sm-8 mx-auto">
+        <h1>THE HOME OF TECHNOLOGY</h1>
+        <p>Welcome to Sheggsmann Tech Blog. Here, we teach you about the latest technology trends and how to become a better computer <code>Programmer</code>.</p>
+        <p>We will take you on languages such as <code>Python</code>, <code>JavaScript</code>, <code>C</code> and <code>C++</code> and many many more. We will teach you how you can apply these skills to real word projects</p>
+        <p>
+          <a class="btn btn-primary pd-4" href="{{url_for('app.main.about')}}" role="button">View more... &raquo;</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% for post in posts %}
+<div class="card mb-3 mt-3">
+  <div class="card-header">
+    <img src="{{ url_for('static', filename='profile_pictures/' + post.author.profile_picture) }}" class="profile_pix alt=" id='profile_pix'>
+    <a id='header-link' href="{{ url_for('app.post.active_post', title=post.title) }}"><h5 class="card-title">{{ post.title }}</h5></a>
+  </div>
+  <div class="card-body">
+    <p class="card-text">{{ post.body }}.</p>
+    <p class="card-text"><small class="text-muted">Last updated {{ datetime.strftime(post.timestamp, '%Y-%m-%d') }}</small></p>
+  </div>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    By: {{ post.author.name }}
+    <span class="badge bg-primary rounded-pill">{{ post.comments.count() }}</span>
+  </li>
+</div>
+{% endfor %}
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li {% if pagination.has_prev %}class="page-item"{% else %}class="page-item disabled"{% endif %}>
+      <a class="page-link" href="{% if pagination.has_prev %}{{ url_for('app.main.home', page=pagination.page - 1)}}
+      {% else %}#{% endif %}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {% for p in pagination.iter_pages() %}
+      {% if p %}
+        {% if p == pagination.page %}
+          <li class="page-item active"><a class="page-link" href="#">{{ p }}</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="{{url_for('app.main.home', page=p) }}">{{ p }}</a></li>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    <li {% if pagination.has_next %}class="page-item"{% else %}class='page-item disabled'{% endif %}>
+      <a class="page-link" href="{% if pagination.has_next %}{{ url_for('app.main.home', page=pagination.page + 1) }}
+      {% else %}#{% endif %}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+{% endblock %}
+
+{% block scripts %}
+  {{ moment.include_moment() }}
+{% endblock %}
+

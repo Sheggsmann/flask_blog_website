@@ -1,0 +1,4 @@
+/app/static/profile_pictures
+/app/__pycache__
+/app/site.db
+/migrations

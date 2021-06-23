@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block section %}
+
+    <form action="" method="POST">
+        {{ form.hidden_tag() }}
+        <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+        
+        <label for="inputEmail" class="visually-hidden">{{ form.email.label }}</label>
+        {{ form.email(class="form-control mb-4", placeholder='Email') }}
+        {% if form.email.errors %}
+            <ul class=errors>
+                {% for error in form.email.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <label for="inputPassword" class="visually-hidden">{{ form.password.label }}</label>
+        {% if form.password.errors %}
+            {{ form.password(class="form-control is-invalid", placeholder='Password') }}
+            {% for error in form.password %}
+                <div class="invalid-feedback">
+                    <span>{{ error }}</span>
+                </div>
+            {% endfor %}
+        {% else %}
+            {{ form.password(class="form-control mb-4", placeholder='Password') }}    
+        {% endif %}
+
+        <div class="form-check checkbox mb-3">
+            {{ form.remember_me(class='form-check-input') }}
+            {{ form.remember_me.label(class='form-check-label') }}
+        </div>
+
+        <div class="form-group pt-3">
+            {{ form.submit(class="btn btn-lg btn-primary btn-block") }}
+        </div>
+    </form>
+
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Don't Have An Account? <a  class="ml-2" href="{{ url_for('app.auth.register') }}">Sign Up</a>
+        </small>
+    </div>
+
+{% endblock %}

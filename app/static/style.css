@@ -1,0 +1,20 @@
+.media {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.account-img {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+#header-link {
+  text-decoration: none;
+}
+
+.user-account {
+  align-self: center;
+  margin-bottom: 30px;
+  margin-top: 20px
+}

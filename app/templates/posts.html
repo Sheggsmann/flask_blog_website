@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block section %}
+<div class="card mb-3 mt-3">
+    <div class="card-header">
+      <img src="{{ url_for('static', filename='profile_pictures/' + post.author.profile_picture) }}" class="profile_pix alt=" id='profile_pix'>
+      <a id='header-link' href="{{ url_for('app.post.active_post', title=post.title) }}"><h5 class="card-title">{{ post.title }}</h5></a>
+    </div>
+    <div class="card-body">
+      <p class="card-text">{{ post.body }}.</p>
+      <p class="card-text"><small class="text-muted">Last updated {{ datetime.strftime(post.timestamp, '%Y-%m-%d') }}</small></p>
+      <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#shareModal">Share</button>
+      {% if current_user.is_authenticated and current_user.email == post.author.email %}
+        <a href="{{ url_for('app.post.edit_post', title=post.title) }}" class="btn btn-warning">Update</a>
+        <button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+      {% endif %}
+
+    </div>
+    <div class="card-footer text-muted">
+        Author: <a id="header-link" href="{{ url_for('app.user.get_user', id=post.author.id)}}">{{ post.author.name }}</a>
+    </div>
+</div>
+
+<form action="" method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.body(class="form-control mb-4", placeholder='comment...') }}
+    {% if form.body.errors %}
+        <ul class=errors>
+            {% for error in form.body.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    {{ form.submit(class="btn btn-primary _4", style="margin-top: -25px;") }} 
+</form>
+
+<ul class="list-group list-group-flush mt-4">
+    <li class="list-group-item list-group-item-action mb-2 list-group-item-secondary">Comments</li>
+    {% for comment in comments %}
+    <li class="list-group-item list-group-item-action">
+        <img src="{{ url_for('static', filename='profile_pictures/' + comment.author.profile_picture) }}" alt="">
+    <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{ comment.author.name }}</h5>
+        <small class="text-muted">3 days ago</small>
+    </div>
+    <p class="mb-1">{{ comment.body }}</p>
+    {% if current_user.email == post.author.email %}
+    <a href="{{ url_for('app.post.delete_comment', id=comment.id) }}" class="btn btn-danger">Delete</a>
+    {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li {% if pagination.has_prev %}class="page-item"{% else %}class="page-item disabled"{% endif %}>
+        <a class="page-link" href="{% if pagination.has_prev %}{{ url_for('app.post.active_post', title=titlee, page=pagination.page - 1)}}
+        {% else %}#{% endif %}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {% for p in pagination.iter_pages() %}
+        {% if p %}
+          {% if p == pagination.page %}
+            <li class="page-item active"><a class="page-link" href="#">{{ p }}</a></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="{{url_for('app.post.active_post', title=title, page=p) }}">{{ p }}</a></li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      <li {% if pagination.has_next %}class="page-item"{% else %}class='page-item disabled'{% endif %}>
+        <a class="page-link" href="{% if pagination.has_next %}{{ url_for('app.post.active_post', title=title, page=pagination.page + 1) }}
+        {% else %}#{% endif %}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+        </li>
+    </ul>
+</nav>
+
+<!-- Modal  -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Do you really wanna delete the post?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                <form action="{{ url_for('app.post.delete_post', title=post.title) }}" method="POST">
+                    <input type="submit" class="btn btn-danger btn-sm" value="Delete">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shareModalLabel">Share Post</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Link:
+                <input type="text" class="form-control" value="http://127.0.0.1:5000/post/{{ post.title }}">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

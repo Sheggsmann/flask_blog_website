@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block section %}
+<form action="" method="POST">
+    {{ form.hidden_tag() }}
+
+    <h1 class="h3 mb-3 font-weight-normal">Create Post</h1>
+        
+    <label for="inputEmail">{{ form.title.label }}</label>
+    {{ form.title(class="form-control mb-4", placeholder='Title') }}
+    {% if form.title.errors %}
+        <ul class=errors>
+            {% for error in form.title.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    <label for="inputText">{{ form.body.label }}</label>
+    {{ form.body(class="form-control mb-4", placeholder='Body') }}
+    {% if form.body.errors %}
+        <ul class=errors>
+            {% for error in form.body.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="form-group pt-3">
+        {{ form.submit(class="btn btn-lg btn-primary btn-block") }}
+    </div>
+</form>
+{% endblock %}

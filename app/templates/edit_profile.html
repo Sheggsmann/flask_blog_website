@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block section %}
+<form action="" method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+
+    <h1 class="h3 mb-3 font-weight-normal">Edit Profile</h1>
+    <div class="media mb-4">
+        <img src="{{ image_file }}" alt="" id="profile" class="rounded-circle account-img">
+        
+        {{ form.picture.label() }}
+        <br>
+        {{ form.picture(class='form-control-file') }}
+        {% if form.picture.errors %}
+            {% for error in form.picture.errors %}
+                <span class="text-danger">{{ error }}</span><br>
+            {% endfor %}
+        {% endif %}
+    </div>
+            
+    {{ form.name.label() }}
+    {{ form.name(class='form-control') }}
+    {% if form.name.errors %}
+            {% for error in form.name.errors %}
+                <span class="text-danger">{{ error }}</span><br>
+            {% endfor %}
+    {% endif %}
+
+    <div class="form-group pt-3">
+        {{ form.submit(class="btn btn-lg btn-primary btn-block") }}
+    </div>
+</form>
+{% endblock %}
